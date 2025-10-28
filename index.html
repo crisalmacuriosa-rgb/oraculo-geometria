@@ -7,9 +7,7 @@
   <style>
     :root{
       --bg:#0b0226;
-      --panel:#120428;
       --accent:#caa32a;
-      --muted:#b9a6f0;
       --glass: rgba(255,255,255,0.04);
     }
     html,body{
@@ -25,58 +23,42 @@
       padding:24px;
     }
     .card{
-      width:100%;max-width:920px;
+      width:100%;max-width:500px;
       background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
       border-radius:16px;
       box-shadow: 0 10px 30px rgba(10,5,20,0.6);
       overflow:hidden;
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:1px;
+      display:flex;flex-direction:column;align-items:center;
+      padding:20px;
+      gap:20px;
       border: 1px solid rgba(202,163,42,0.08);
     }
-    .left{
-      padding:26px;
-      background: linear-gradient(135deg, rgba(18,4,40,0.6), rgba(40,10,60,0.35));
-      display:flex;flex-direction:column;align-items:center;justify-content:center;
-    }
     canvas{
-      background:transparent;border-radius:12px;
       width:100%;
       aspect-ratio:1/1;
+      border-radius:12px;
+      background:transparent;
       box-shadow: inset 0 0 40px rgba(0,0,0,0.3);
     }
-    .title{font-size:20px;letter-spacing:0.6px;color:var(--muted);margin-bottom:8px;}
-    h1{margin:0;font-size:24px;color:#fff;text-align:center;}
     .btn{
-      margin-top:18px;
+      margin-top:10px;
       background:linear-gradient(180deg, #6f2ecb, #512092);
       border:none;color:white;padding:10px 18px;border-radius:12px;font-weight:600;cursor:pointer;
       box-shadow: 0 6px 18px rgba(93,26,150,0.35);
       transition: transform 0.2s;
     }
     .btn:hover{transform:scale(1.05);}
-    .right{
-      padding:26px 28px;
-      display:flex;flex-direction:column;gap:12px;
-      background: linear-gradient(180deg, rgba(6,2,20,0.2), rgba(8,2,30,0.1));
-    }
-    .meta{display:flex;align-items:center;gap:12px;}
+    .meta{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center;}
     .num-badge{
       background:linear-gradient(180deg,#caa32a,#9e7718);
       padding:8px 12px;border-radius:12px;font-weight:700;color:#140308;
       box-shadow: 0 6px 12px rgba(202,163,42,0.12);
     }
-    .sym-name{font-size:20px;margin:0;color:#fff;}
-    .meaning, .message{color:#dcd2ff;opacity:0.95;font-size:15px;line-height:1.5;}
+    .sym-name{font-size:20px;margin:0;color:#fff;text-align:center;}
+    .meaning, .message{color:#dcd2ff;opacity:0.95;font-size:15px;line-height:1.5;text-align:center;}
     .message{background:var(--glass);border-radius:10px;padding:12px;color:#f7ecff;font-style:italic;}
-    .controls{display:flex;gap:10px;align-items:center;margin-top:8px;flex-wrap:wrap;}
-    .small{font-size:13px;color:#bfb0ff;}
-    footer{padding:14px;text-align:center;color:#b9a6f0;background:linear-gradient(180deg,transparent,rgba(255,255,255,0.01));}
-    @media(max-width:880px){
-      .card{grid-template-columns:1fr;max-width:640px;}
-      canvas{width:100%;height:auto;}
-    }
+    .controls{display:flex;gap:10px;align-items:center;margin-top:10px;flex-wrap:wrap;justify-content:center;}
+    footer{display:none;} /* remove footer secundário */
     .reveal {
       transform-origin:50% 50%;
       animation: pop .6s cubic-bezier(.2,.9,.34,1) both;
@@ -89,32 +71,24 @@
 </head>
 <body>
   <div class="card">
-    <div class="left">
-      <canvas id="artCanvas"></canvas>
-      <div class="controls">
-        <button id="drawBtn" class="btn">Sortear Carta</button>
-        <button id="shareBtn" class="btn">Compartilhar link</button>
-      </div>
+    <canvas id="artCanvas"></canvas>
+    <div class="controls">
+      <button id="drawBtn" class="btn">Sortear Carta</button>
+      <button id="shareBtn" class="btn">Compartilhar link</button>
     </div>
-    <div class="right">
-      <div class="meta">
-        <div class="num-badge" id="cardNumber">—</div>
-        <h2 class="sym-name" id="symName">Clique em "Sortear Carta"</h2>
-      </div>
-      <div>
-        <h3 style="margin:0;font-size:16px;color:var(--accent)">Significado</h3>
-        <p class="meaning" id="meaning">Aguardando sorteio...</p>
-      </div>
-      <div>
-        <h3 style="margin:0;font-size:16px;color:var(--accent)">Mensagem</h3>
-        <div class="message" id="message">Quando a carta aparecer, respire fundo e leia com atenção.</div>
-      </div>
-      <div style="margin-top:auto">
-        <div class="small">Dica: cada visitante que clicar faz seu próprio sorteio.</div>
-      </div>
+    <div class="meta">
+      <div class="num-badge" id="cardNumber">—</div>
+      <h2 class="sym-name" id="symName">Clique em "Sortear Carta"</h2>
+    </div>
+    <div>
+      <h3 style="margin:0;font-size:16px;color:var(--accent);text-align:center;">Significado</h3>
+      <p class="meaning" id="meaning">Aguardando sorteio...</p>
+    </div>
+    <div>
+      <h3 style="margin:0;font-size:16px;color:var(--accent);text-align:center;">Mensagem</h3>
+      <div class="message" id="message">Quando a carta aparecer, respire fundo e leia com atenção.</div>
     </div>
   </div>
-  <footer>Oráculo criado por você • Visual místico • Som suave integrado</footer>
 
   <script>
     const cards = [
@@ -158,63 +132,4 @@
 
       ctx.clearRect(0,0,canvas.width,canvas.height);
 
-      const g = ctx.createRadialGradient(cx,cy,40,cx,cy,520);
-      g.addColorStop(0,"rgba(170,120,255,0.12)");
-      g.addColorStop(0.6,"rgba(60,20,80,0.04)");
-      g.addColorStop(1,"rgba(6,2,20,0)");
-      ctx.fillStyle = g;
-      ctx.fillRect(0,0,canvas.width,canvas.height);
-
-      ctx.save();
-      ctx.translate(cx,cy);
-      const t=Date.now()*0.00012;
-      ctx.rotate(Math.sin(t+idx)*0.02);
-      ctx.lineWidth=3;
-      ctx.strokeStyle="rgba(230,215,255,0.9)";
-      ctx.beginPath();
-      for(let i=0;i<6;i++){
-        const angle=(i/6)*Math.PI*2;
-        ctx.lineTo(Math.cos(angle)*size,Math.sin(angle)*size);
-      }
-      ctx.closePath();
-      ctx.stroke();
-      ctx.restore();
-    }
-
-    function randomIndex(){return Math.floor(Math.random()*cards.length);}
-    const drawBtn=document.getElementById('drawBtn');
-    const shareBtn=document.getElementById('shareBtn');
-    const symName=document.getElementById('symName');
-    const meaning=document.getElementById('meaning');
-    const message=document.getElementById('message');
-    const cardNumber=document.getElementById('cardNumber');
-
-    drawBtn.addEventListener('click',()=>{
-      const idx=randomIndex();
-      const card=cards[idx];
-      symName.textContent=card.name;
-      meaning.textContent=card.meaning;
-      message.textContent=card.message;
-      cardNumber.textContent=idx+1;
-      drawGeometry(idx);
-      [symName, meaning, message].forEach(el=>{
-        el.classList.add('reveal');
-        setTimeout(()=>el.classList.remove('reveal'),600);
-      });
-    });
-
-    shareBtn.addEventListener('click',()=>{
-      const url=location.href;
-      navigator.clipboard?.writeText(url).then(()=>{
-        shareBtn.textContent="Link copiado!";
-        setTimeout(()=>shareBtn.textContent="Compartilhar link",1400);
-      });
-    });
-
-    window.addEventListener('load',()=>{setTimeout(()=>{drawBtn.click();},800);});
-    window.addEventListener('resize',()=> drawBtn.click());
-  </script>
-</body>
-</html>
-
-
+      const g = ctx.createRad
