@@ -1,204 +1,1067 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Oráculo da Geometria Sagrada — 22 Cartas</title>
-  <style>
-    :root{
-      --bg:#0b0226;
-      --panel:#120428;
-      --accent:#caa32a;
-      --muted:#b9a6f0;
-      --glass: rgba(255,255,255,0.04);
-    }
-    html,body{
-      height:100%;margin:0;
-      font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;
-    }
-    body{
-      background: radial-gradient(1200px 600px at 10% 20%, rgba(90,19,150,0.18), transparent 10%),
-                  radial-gradient(1000px 500px at 90% 80%, rgba(200,140,255,0.06), transparent 10%),
-                  var(--bg);
-      color:#efe8ff;
-      display:flex;align-items:center;justify-content:center;
-      padding:24px;
-    }
-    .card{
-      width:100%;max-width:920px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border-radius:16px;
-      box-shadow: 0 10px 30px rgba(10,5,20,0.6);
-      overflow:hidden;
-      display:grid;
-      grid-template-columns: 1fr 220px;
-      gap:1px;
-      border: 1px solid rgba(202,163,42,0.08);
-    }
-    .left{
-      padding:20px;
-      background: linear-gradient(135deg, rgba(18,4,40,0.6), rgba(40,10,60,0.35));
-      display:flex;flex-direction:column;align-items:center;justify-content:center;
-    }
-    canvas{
-      background:transparent;border-radius:12px;width:100%;height:auto;
-      aspect-ratio:1/1;
-      box-shadow: inset 0 0 40px rgba(0,0,0,0.3);
-    }
-    .btn{
-      margin-top:12px;
-      background:linear-gradient(180deg, #6f2ecb, #512092);
-      border:none;color:white;padding:10px 18px;border-radius:12px;font-weight:600;cursor:pointer;
-      box-shadow: 0 6px 18px rgba(93,26,150,0.35);
-      transition: transform 0.2s;
-    }
-    .btn:hover{transform:scale(1.05);}
-    .right{
-      padding:20px;
-      display:flex;flex-direction:column;gap:12px;
-      background: linear-gradient(180deg, rgba(6,2,20,0.2), rgba(8,2,30,0.1));
-    }
-    .meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-start;}
-    .num-badge{
-      background:linear-gradient(180deg,#caa32a,#9e7718);
-      padding:6px 10px;border-radius:12px;font-weight:700;color:#140308;
-      box-shadow: 0 6px 12px rgba(202,163,42,0.12);
-    }
-    .sym-name{font-size:18px;margin:0;color:#fff;}
-    .meaning, .message{color:#dcd2ff;opacity:0.95;font-size:14px;line-height:1.5;}
-    .message{background:var(--glass);border-radius:10px;padding:10px;color:#f7ecff;font-style:italic;}
-    .reveal {
-      transform-origin:50% 50%;
-      animation: pop .6s cubic-bezier(.2,.9,.34,1) both;
-    }
-    @keyframes pop {
-      from {opacity:0;transform:scale(.86) rotate(-6deg);filter:blur(6px);}
-      to {opacity:1;transform:scale(1) rotate(0);filter:blur(0);}
-    }
-    @media(max-width:880px){
-      .card{grid-template-columns:1fr;}
-      .right{padding:16px;}
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Oráculo da Geometria Sagrada — 22 Cartas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root{
+            --bg:#0b0226;
+            --panel:#120428;
+            --accent:#caa32a;
+            --muted:#b9a6f0;
+            --glass: rgba(255,255,255,0.04);
+        }
+        html,body{
+            height:100%;margin:0;
+            font-family:'Inter', sans-serif;
+        }
+        body{
+            background: radial-gradient(1200px 600px at 10% 20%, rgba(90,19,150,0.18), transparent 10%),
+                        radial-gradient(1000px 500px at 90% 80%, rgba(200,140,255,0.06), transparent 10%),
+                        var(--bg);
+            color:#efe8ff;
+            display:flex;align-items:center;justify-content:center;
+            padding:24px;
+            overflow: hidden; /* Prevent scroll on some geometries */
+        }
+        .card{
+            width:100%;max-width:920px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+            border-radius:16px;
+            box-shadow: 0 10px 30px rgba(10,5,20,0.6);
+            overflow:hidden;
+            display:grid;
+            grid-template-columns: 1fr 280px; /* Increased right panel width */
+            gap:1px;
+            border: 1px solid rgba(202,163,42,0.08);
+        }
+        .left{
+            padding:20px;
+            background: linear-gradient(135deg, rgba(18,4,40,0.6), rgba(40,10,60,0.35));
+            display:flex;flex-direction:column;align-items:center;justify-content:center;
+            position: relative; /* For loading indicator */
+        }
+        canvas{
+            background:transparent;border-radius:12px;width:100%;height:auto;
+            aspect-ratio:1/1;
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.3);
+            border: 1px solid rgba(202,163,42,0.1);
+        }
+        .btn{
+            margin-top:12px;
+            background:linear-gradient(180deg, #6f2ecb, #512092);
+            border:none;color:white;padding:10px 18px;border-radius:12px;font-weight:600;cursor:pointer;
+            box-shadow: 0 6px 18px rgba(93,26,150,0.35);
+            transition: transform 0.2s, background 0.2s;
+        }
+        .btn:hover{transform:scale(1.03); background:linear-gradient(180deg, #7a3ee0, #5c28a8);}
+        .btn:active{transform:scale(0.98);}
+
+        .right{
+            padding:20px;
+            display:flex;flex-direction:column;gap:16px; /* Increased gap */
+            background: linear-gradient(180deg, rgba(6,2,20,0.2), rgba(8,2,30,0.1));
+        }
+        .meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-start;}
+        .num-badge{
+            background:linear-gradient(180deg,#caa32a,#9e7718);
+            padding:6px 12px;border-radius:12px;font-weight:700;color:#140308;
+            box-shadow: 0 6px 12px rgba(202,163,42,0.12);
+            min-width: 30px; text-align: center;
+        }
+        .sym-name{font-size:22px;margin:0;color:#fff; line-height: 1.2;}
+        .meaning, .message{color:#dcd2ff;opacity:0.95;font-size:15px;line-height:1.6;}
+        .message{background:var(--glass);border-radius:10px;padding:12px;color:#f7ecff;font-style:italic;
+                 border: 1px solid rgba(255,255,255,0.06);}
+
+        .reveal {
+            transform-origin:50% 50%;
+            animation: pop .6s cubic-bezier(.2,.9,.34,1) both;
+        }
+        @keyframes pop {
+            from {opacity:0;transform:scale(.86) rotate(-2deg);filter:blur(4px);}
+            to {opacity:1;transform:scale(1) rotate(0);filter:blur(0);}
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(18,4,40,0.8);
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 16px;
+            z-index: 10;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .loading-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid var(--accent);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+
+        @media(max-width:880px){
+            .card{grid-template-columns:1fr;}
+            .right{padding:16px;}
+            .sym-name{font-size:20px;}
+            .meaning, .message{font-size:14px;}
+            body{padding:16px;}
+        }
+    </style>
 </head>
 <body>
-  <div class="card">
-    <div class="left">
-      <canvas id="artCanvas"></canvas>
-      <button id="drawBtn" class="btn">Sortear Carta</button>
-      <button id="shareBtn" class="btn">Compartilhar link</button>
+    <div class="card">
+        <div class="left">
+            <canvas id="artCanvas"></canvas>
+            <button id="drawBtn" class="btn">Sortear Carta</button>
+            <button id="shareBtn" class="btn">Compartilhar link</button>
+            <div id="loadingOverlay" class="loading-overlay">
+                <div class="spinner"></div>
+            </div>
+        </div>
+        <div class="right">
+            <div class="meta">
+                <div class="num-badge" id="cardNumber">—</div>
+                <h2 class="sym-name" id="symName">Clique em "Sortear Carta"</h2>
+            </div>
+            <div>
+                <h3 style="margin:0;font-size:14px;color:var(--accent)">Significado</h3>
+                <p class="meaning" id="meaning">Aguardando sorteio...</p>
+            </div>
+            <div>
+                <h3 style="margin:0;font-size:14px;color:var(--accent)">Mensagem</h3>
+                <div class="message" id="message">Quando a carta aparecer, respire fundo e leia com atenção.</div>
+            </div>
+        </div>
     </div>
-    <div class="right">
-      <div class="meta">
-        <div class="num-badge" id="cardNumber">—</div>
-        <h2 class="sym-name" id="symName">Clique em "Sortear Carta"</h2>
-      </div>
-      <div>
-        <h3 style="margin:0;font-size:14px;color:var(--accent)">Significado</h3>
-        <p class="meaning" id="meaning">Aguardando sorteio...</p>
-      </div>
-      <div>
-        <h3 style="margin:0;font-size:14px;color:var(--accent)">Mensagem</h3>
-        <div class="message" id="message">Quando a carta aparecer, respire fundo e leia com atenção.</div>
-      </div>
-    </div>
-  </div>
 
-  <script>
-    const cards = [
-      {name:"Flor da Vida", meaning:"Matriz da criação; unidade e interconexão de todas as coisas.", message:"Conecte-se ao padrão que sustenta sua vida. Permita a harmonia."},
-      {name:"Semente da Vida", meaning:"Germinação de potenciais; início de ciclos criativos.", message:"Uma ideia plantada hoje pode florescer de forma inesperada."},
-      {name:"Merkaba", meaning:"Campo de luz e transmutação; equilíbrio entre masculino e feminino divino.", message:"Proteja seu campo e sinta a dança entre céu e terra."},
-      {name:"Cubo de Metatron", meaning:"Estrutura divina da manifestação; ordem cósmica.", message:"Organize o caos em formas que sirvam sua evolução."},
-      {name:"Tetraedro", meaning:"Elemento fogo; impulso criativo e ação transformadora.", message:"Aja com coragem e clareza. O movimento traz mudança."},
-      {name:"Hexagrama", meaning:"Equilíbrio entre opostos; união do espiritual e do material.", message:"Integre dentro de você o que parecia separado."},
-      {name:"Octaedro", meaning:"Elemento ar; clareza mental e comunhão.", message:"Ouça com mente serena o que o silêncio revela."},
-      {name:"Icosaedro", meaning:"Elemento água; fluidez emocional e intuição.", message:"Deixe as emoções guiarem com sabedoria, não com pressa."},
-      {name:"Dodecaedro", meaning:"O éter; sabedoria universal e ponte para o espiritual.", message:"Busque o sentido que atravessa o tempo e as formas."},
-      {name:"Vesica Piscis", meaning:"Porta de transformação e nascimento entre dois mundos.", message:"Permita o encontro criar novas possibilidades."},
-      {name:"Triângulo Sagrado", meaning:"Trindade: corpo, mente e espírito em alinhamento.", message:"Equilibre suas três centrais para agir com integridade."},
-      {name:"Espiral Áurea", meaning:"Crescimento harmonioso seguindo a proporção da vida.", message:"Expanda devagar, respeitando seu ritmo interior."},
-      {name:"Olho de Deus", meaning:"Percepção ampliada; visão que observa sem julgar.", message:"Veja além do imediato com compaixão."},
-      {name:"Flor de 12 Pétalas", meaning:"Ciclo completo; integração dos ritmos naturais.", message:"Feche o ciclo com gratidão e comece um novo com confiança."},
-      {name:"Mandala do Coração", meaning:"Centro do amor; harmoniza relacionamentos e propósito.", message:"O que você dá em amor volta em sustento."},
-      {name:"Nó Infinito", meaning:"Conexão eterna e fluxo contínuo da energia vital.", message:"Cultive presença no movimento contínuo da vida."},
-      {name:"Campo Cristalino", meaning:"Claridade, memória da Terra e cura através da luz.", message:"Permita que memórias curativas venham à superfície."},
-      {name:"Portão Estelar", meaning:"Abertura para dimensões sutis e caminhos de insight.", message:"Confie nos sinais que chegam em sonho e intuição."},
-      {name:"Mandala do Tempo", meaning:"Ritmos e ciclos; lembrete de paciência e sincronias.", message:"O tempo é tutor — aprenda seus compassos."},
-      {name:"Coração Geométrico", meaning:"Amor alinhado à estrutura sagrada; coerência íntima.", message:"Atue a partir do coração alinhado com sua verdade."},
-      {name:"Elo de Luz", meaning:"União entre almas; círculos de suporte e cura.", message:"Procure quem reflete seu melhor e ofereça reciprocidade."},
-      {name:"Prisma de Frequência", meaning:"Desdobramento de luz; multiplicação de possibilidades.", message:"Quando você muda a frequência, a realidade responde."}
-    ];
+    <script>
+        const cards = [
+            {name:"Flor da Vida", meaning:"Matriz da criação; unidade e interconexão de todas as coisas.", message:"Conecte-se ao padrão que sustenta sua vida. Permita a harmonia."},
+            {name:"Semente da Vida", meaning:"Germinação de potenciais; início de ciclos criativos.", message:"Uma ideia plantada hoje pode florescer de forma inesperada."},
+            {name:"Merkaba", meaning:"Campo de luz e transmutação; equilíbrio entre masculino e feminino divino.", message:"Proteja seu campo e sinta a dança entre céu e terra."},
+            {name:"Cubo de Metatron", meaning:"Estrutura divina da manifestação; ordem cósmica.", message:"Organize o caos em formas que sirvam sua evolução."},
+            {name:"Tetraedro", meaning:"Elemento fogo; impulso criativo e ação transformadora.", message:"Aja com coragem e clareza. O movimento traz mudança."},
+            {name:"Hexagrama", meaning:"Equilíbrio entre opostos; união do espiritual e do material.", message:"Integre dentro de você o que parecia separado."},
+            {name:"Octaedro", meaning:"Elemento ar; clareza mental e comunhão.", message:"Ouça com mente serena o que o silêncio revela."},
+            {name:"Icosaedro", meaning:"Elemento água; fluidez emocional e intuição.", message:"Deixe as emoções guiarem com sabedoria, não com pressa."},
+            {name:"Dodecaedro", meaning:"O éter; sabedoria universal e ponte para o espiritual.", message:"Busque o sentido que atravessa o tempo e as formas."},
+            {name:"Vesica Piscis", meaning:"Porta de transformação e nascimento entre dois mundos.", message:"Permita o encontro criar novas possibilidades."},
+            {name:"Triângulo Sagrado", meaning:"Trindade: corpo, mente e espírito em alinhamento.", message:"Equilibre suas três centrais para agir com integridade."},
+            {name:"Espiral Áurea", meaning:"Crescimento harmonioso seguindo a proporção da vida.", message:"Expanda devagar, respeitando seu ritmo interior."},
+            {name:"Olho de Deus", meaning:"Percepção ampliada; visão que observa sem julgar.", message:"Veja além do imediato com compaixão."},
+            {name:"Flor de 12 Pétalas", meaning:"Ciclo completo; integração dos ritmos naturais.", message:"Feche o ciclo com gratidão e comece um novo com confiança."},
+            {name:"Mandala do Coração", meaning:"Centro do amor; harmoniza relacionamentos e propósito.", message:"O que você dá em amor volta em sustento."},
+            {name:"Nó Infinito", meaning:"Conexão eterna e fluxo contínuo da energia vital.", message:"Cultive presença no movimento contínuo da vida."},
+            {name:"Campo Cristalino", meaning:"Claridade, memória da Terra e cura através da luz.", message:"Permita que memórias curativas venham à superfície."},
+            {name:"Portão Estelar", meaning:"Abertura para dimensões sutis e caminhos de insight.", message:"Confie nos sinais que chegam em sonho e intuição."},
+            {name:"Mandala do Tempo", meaning:"Ritmos e ciclos; lembrete de paciência e sincronias.", message:"O tempo é tutor — aprenda seus compassos."},
+            {name:"Coração Geométrico", meaning:"Amor alinhado à estrutura sagrada; coerência íntima.", message:"Atue a partir do coração alinhado com sua verdade."},
+            {name:"Elo de Luz", meaning:"União entre almas; círculos de suporte e cura.", message:"Procure quem reflete seu melhor e ofereça reciprocidade."},
+            {name:"Prisma de Frequência", meaning:"Desdobramento de luz; multiplicação de possibilidades.", message:"Quando você muda a frequência, a realidade responde."}
+        ];
 
-    const canvas = document.getElementById('artCanvas');
-    const ctx = canvas.getContext('2d');
+        const canvas = document.getElementById('artCanvas');
+        const ctx = canvas.getContext('2d');
+        let animationFrameId = null;
 
-    function resizeCanvas() {
-      const rect = canvas.getBoundingClientRect();
-      canvas.width = rect.width;
-      canvas.height = rect.width; // mantém quadrado
-    }
+        const drawBtn = document.getElementById('drawBtn');
+        const shareBtn = document.getElementById('shareBtn');
+        const symName = document.getElementById('symName');
+        const meaning = document.getElementById('meaning');
+        const message = document.getElementById('message');
+        const cardNumber = document.getElementById('cardNumber');
+        const loadingOverlay = document.getElementById('loadingOverlay');
 
-    function drawGeometry(idx){
-      resizeCanvas();
-      const cx=canvas.width/2, cy=canvas.height/2;
-      const size=Math.min(canvas.width,canvas.height)*0.34;
+        function resizeCanvas() {
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.width; // Keeps it square
+        }
 
-      ctx.clearRect(0,0,canvas.width,canvas.height);
+        // --- Utility drawing functions ---
+        function clearCanvas(cx, cy, size) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const g = ctx.createRadialGradient(cx, cy, 40, cx, cy, Math.max(canvas.width, canvas.height) / 2);
+            g.addColorStop(0, "rgba(170,120,255,0.08)");
+            g.addColorStop(0.6, "rgba(60,20,80,0.04)");
+            g.addColorStop(1, "rgba(6,2,20,0)");
+            ctx.fillStyle = g;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      const g = ctx.createRadialGradient(cx,cy,40,cx,cy,520);
-      g.addColorStop(0,"rgba(170,120,255,0.12)");
-      g.addColorStop(0.6,"rgba(60,20,80,0.04)");
-      g.addColorStop(1,"rgba(6,2,20,0)");
-      ctx.fillStyle = g;
-      ctx.fillRect(0,0,canvas.width,canvas.height);
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = "rgba(230,215,255,0.7)";
+            ctx.fillStyle = "rgba(230,215,255,0.05)";
+        }
 
-      ctx.save();
-      ctx.translate(cx,cy);
-      const t=Date.now()*0.00012;
-      ctx.rotate(Math.sin(t+idx)*0.02);
-      ctx.lineWidth=3;
-      ctx.strokeStyle="rgba(230,215,255,0.9)";
-      ctx.beginPath();
-      for(let i=0;i<6;i++){
-        const angle=(i/6)*Math.PI*2;
-        ctx.lineTo(Math.cos(angle)*size,Math.sin(angle)*size);
-      }
-      ctx.closePath();
-      ctx.stroke();
-      ctx.restore();
-    }
+        function drawCircle(x, y, radius, fill = false) {
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            if (fill) ctx.fill();
+        }
 
-    const drawBtn=document.getElementById('drawBtn');
-    const shareBtn=document.getElementById('shareBtn');
-    const symName=document.getElementById('symName');
-    const meaning=document.getElementById('meaning');
-    const message=document.getElementById('message');
-    const cardNumber=document.getElementById('cardNumber');
+        function drawLine(x1, y1, x2, y2) {
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+        }
 
-    function drawCard(){
-      const idx=Math.floor(Math.random()*cards.length);
-      const card=cards[idx];
-      symName.textContent=card.name;
-      meaning.textContent=card.meaning;
-      message.textContent=card.message;
-      cardNumber.textContent=idx+1;
-      drawGeometry(idx);
-      [symName, meaning, message].forEach(el=>{
-        el.classList.add('reveal');
-        setTimeout(()=>el.classList.remove('reveal'),600);
-      });
-    }
+        function drawPolygon(sides, x, y, radius, rotation = 0, fill = false) {
+            ctx.beginPath();
+            for (let i = 0; i < sides; i++) {
+                const angle = rotation + (i / sides) * Math.PI * 2;
+                ctx.lineTo(x + Math.cos(angle) * radius, y + Math.sin(angle) * radius);
+            }
+            ctx.closePath();
+            ctx.stroke();
+            if (fill) ctx.fill();
+        }
 
-    drawBtn.addEventListener('click',drawCard);
-    shareBtn.addEventListener('click',()=>{
-      navigator.clipboard.writeText(location.href)
-      .then(()=>{shareBtn.textContent="Link copiado!"; setTimeout(()=>shareBtn.textContent="Compartilhar link",1400);});
-    });
+        // --- Specific Geometry Drawing Functions ---
 
-    window.addEventListener('load',()=>{drawCard();});
-    window.addEventListener('resize',()=>{drawGeometry(0);});
-  </script>
+        // 0. Flor da Vida
+        function drawFlorDaVida(cx, cy, size, t) {
+            const numCircles = 7;
+            const radius = size / (numCircles / 1.6);
+            clearCanvas(cx, cy, size);
+
+            ctx.lineWidth = 1.5;
+            ctx.strokeStyle = "rgba(230,215,255,0.8)";
+
+            // Central circle
+            drawCircle(cx, cy, radius);
+
+            // First layer of 6 circles
+            for (let i = 0; i < 6; i++) {
+                const angle = (i / 6) * Math.PI * 2 + t * 0.05;
+                drawCircle(cx + Math.cos(angle) * radius, cy + Math.sin(angle) * radius, radius);
+            }
+
+            // Outer layer arcs
+            ctx.beginPath();
+            for (let i = 0; i < 6; i++) {
+                const angle = (i / 6) * Math.PI * 2 + t * 0.05;
+                const x = cx + Math.cos(angle) * radius * 2;
+                const y = cy + Math.sin(angle) * radius * 2;
+                ctx.arc(x, y, radius, angle - Math.PI / 3, angle + Math.PI / 3);
+            }
+            ctx.stroke();
+        }
+
+        // 1. Semente da Vida
+        function drawSementeDaVida(cx, cy, size, t) {
+            const radius = size / 3;
+            clearCanvas(cx, cy, size);
+
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = "rgba(230,215,255,0.9)";
+
+            // Central circle
+            drawCircle(cx, cy, radius);
+
+            // 6 surrounding circles
+            for (let i = 0; i < 6; i++) {
+                const angle = (i / 6) * Math.PI * 2 + t * 0.08;
+                drawCircle(cx + Math.cos(angle) * radius, cy + Math.sin(angle) * radius, radius);
+            }
+        }
+
+        // 2. Merkaba
+        function drawMerkaba(cx, cy, size, t) {
+            clearCanvas(cx, cy, size);
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = "rgba(230,215,255,0.9)";
+            const radius = size * 0.8;
+
+            // Upward pointing tetrahedron
+            ctx.beginPath();
+            let rot1 = t * 0.05;
+            for (let i = 0; i < 3; i++) {
+                const angle = rot1 + (i / 3) * Math.PI * 2;
+                ctx.lineTo(cx + Math.cos(angle) * radius, cy + Math.sin(angle) * radius);
+            }
+            ctx.closePath();
+            ctx.stroke();
+
+            // Downward pointing tetrahedron (rotated)
+            ctx.beginPath();
+            let rot2 = rot1 + Math.PI; // Opposite rotation
+            for (let i = 0; i < 3; i++) {
+                const angle = rot2 + (i / 3) * Math.PI * 2;
+                ctx.lineTo(cx + Math.cos(angle) * radius, cy + Math.sin(angle) * radius);
+            }
+            ctx.closePath();
+            ctx.stroke();
+
+            // Connect vertices for depth
+            for (let i = 0; i < 3; i++) {
+                const angle1 = rot1 + (i / 3) * Math.PI * 2;
+                const angle2 = rot2 + (i / 3) * Math.PI * 2;
+                drawLine(cx + Math.cos(angle1) * radius, cy + Math.sin(angle1) * radius,
+                         cx + Math.cos(angle2) * radius, cy + Math.sin(angle2) * radius);
+            }
+        }
+
+        // 3. Cubo de Metatron
+        function drawCuboDeMetatron(cx, cy, size, t) {
+            clearCanvas(cx, cy, size);
+            ctx.lineWidth = 1.2;
+            ctx.strokeStyle = "rgba(230,215,255,0.8)";
+            const radius = size * 0.25;
+
+            // Draw the 13 circles
+            const circles = [];
+            circles.push({x: cx, y: cy, r: radius}); // Center
+
+            for (let i = 0; i < 6; i++) {
+                const angle = (i / 6) * Math.PI * 2 + t * 0.03;
+                circles.push({x: cx + Math.cos(angle) * radius * 2, y: cy + Math.sin(angle) * radius * 2, r: radius});
+            }
+            // Add another layer of 6 circles based on the first layer
+            for (let i = 0; i < 6; i++) {
+                const angle = (i / 6) * Math.PI * 2 + Math.PI/6 + t * 0.03;
+                circles.push({x: cx + Math.cos(angle) * radius * Math.sqrt(12), y: cy + Math.sin(angle) * radius * Math.sqrt(12), r: radius});
+            }
+
+            circles.forEach(c => drawCircle(c.x, c.y, c.r));
+
+            // Connect centers of all circles
+            ctx.lineWidth = 0.8;
+            ctx.strokeStyle = "rgba(230,215,255,0.6)";
+            for (let i = 0; i < circles.length; i++) {
+                for (let j = i + 1; j < circles.length; j++) {
+                    const dist = Math.hypot(circles[i].x - circles[j].x, circles[i].y - circles[j].y);
+                    if (dist < radius * 6) { // Heuristic to connect relevant points
+                         drawLine(circles[i].x, circles[i].y, circles[j].x, circles[j].y);
+                    }
+                }
+            }
+        }
+
+        // 4. Tetraedro (3D projection)
+        function drawTetraedro(cx, cy, size, t) {
+            clearCanvas(cx, cy, size);
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = "rgba(230,215,255,0.9)";
+            ctx.fillStyle = "rgba(230,215,255,0.08)";
+
+            const angle = Math.PI / 4 + t * 0.08;
+            const h = size * 0.8; // Height of the tetrahedron projection
+            const baseRadius = h / Math.sqrt(3);
+
+            // Vertices
+            const p = [];
+            p.push({x: cx, y: cy - h * 0.5}); // Top vertex
+            for (let i = 0; i < 3; i++) {
+                const a = angle + (i / 3) * Math.PI * 2;
+                p.push({x: cx + Math.cos(a) * baseRadius, y: cy + Math.sin(a) * baseRadius * 0.6 + h * 0.2});
+            }
+
+            // Faces (simulate 3D by drawing closer lines darker/thicker)
+            const edges = [
+                [0, 1], [0, 2], [0, 3], // Top to base vertices
+                [1, 2], [2, 3], [3, 1]  // Base edges
+            ];
+
+            edges.forEach(([v1, v2]) => {
+                drawLine(p[v1].x, p[v1].y, p[v2].x, p[v2].y);
+            });
+
+            // Fill base for a subtle 3D feel
+            ctx.beginPath();
+            ctx.moveTo(p[1].x, p[1].y);
+            ctx.lineTo(p[2].x, p[2].y);
+            ctx.lineTo(p[3].x, p[3].y);
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        // 5. Hexagrama
+        function drawHexagrama(cx, cy, size, t) {
+            clearCanvas(cx, cy, size);
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = "rgba(230,215,255,0.9)";
+            ctx.fillStyle = "rgba(230,215,255,0.05)";
+
+            const outerRadius = size * 0.8;
+            const rotation = t * 0.05;
+
+            // Upward triangle
+            ctx.beginPath();
+            for (let i = 0; i < 3; i++) {
+                const angle = rotation + (i / 3) * Math.PI * 2 - Math.PI / 2;
+                ctx.lineTo(cx + Math.cos(angle) * outerRadius, cy + Math.sin(angle) * outerRadius);
+            }
+            ctx.closePath();
+            ctx.stroke();
+            ctx.fill();
+
+            // Downward triangle
+            ctx.beginPath();
+            for (let i = 0; i < 3; i++) {
+                const angle = rotation + Math.PI + (i / 3) * Math.PI * 2 - Math.PI / 2;
+                ctx.lineTo(cx + Math.cos(angle) * outerRadius, cy + Math.sin(angle) * outerRadius);
+            }
+            ctx.closePath();
+            ctx.stroke();
+            ctx.fill();
+        }
+
+        // 6. Octaedro (3D projection)
+        function drawOctaedro(cx, cy, size, t) {
+            clearCanvas(cx, cy, size);
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = "rgba(230,215,255,0.9)";
+            ctx.fillStyle = "rgba(230,215,255,0.08)";
+
+            const radius = size * 0.7;
+            const angle = t * 0.06;
+
+            // Vertices
+            const v = [];
+            v.push({x: cx, y: cy - radius}); // Top
+            v.push({x: cx, y: cy + radius}); // Bottom
+            for (let i = 0; i < 4; i++) {
+                const a = angle + (i / 4) * Math.PI * 2;
+                v.push({x: cx + Math.cos(a) * radius * 0.7, y: cy + Math.sin(a) * radius * 0.7}); // Mid-plane
+            }
+
+            const edges = [
+                [0, 2], [0, 3], [0, 4], [0, 5], // Top to mid-plane
+                [1, 2], [1, 3], [1, 4], [1, 5], // Bottom to mid-plane
+                [2, 3], [3, 4], [4, 5], [5, 2]  // Mid-plane square
+            ];
+
+            // Draw and fill the visible faces for a subtle 3D effect
+            // Simplified: just draw all edges
+            edges.forEach(([v1, v2]) => {
+                drawLine(v[v1].x, v[v1].y, v[v2].x, v[v2].y);
+            });
+
+            // Fill a face to show depth
+            ctx.beginPath();
+            ctx.moveTo(v[0].x, v[0].y);
+            ctx.lineTo(v[2].x, v[2].y);
+            ctx.lineTo(v[3].x, v[3].y);
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        // 7. Icosaedro (simplified projection)
+        function drawIcosaedro(cx, cy, size, t) {
+            clearCanvas(cx, cy, size);
+            ctx.lineWidth = 1.5;
+            ctx.strokeStyle = "rgba(230,215,255,0.8)";
+            ctx.fillStyle = "rgba(230,215,255,0.05)";
+
+            const R = size * 0.7; // Circumradius
+            const rotation = t * 0.04;
+
+            // Vertices (simplified 2D projection for a visually recognizable shape)
+            const vertices = [];
+            for (let i = 0; i < 5; i++) {
+                let angle = rotation + (i / 5) * Math.PI * 2;
+                vertices.push({ x: cx + R * Math.cos(angle), y: cy + R * Math.sin(angle) });
+                angle += Math.PI / 5; // Offset for alternating points
+                vertices.push({ x: cx + R * 0.6 * Math.cos(angle), y: cy + R * 0.6 * Math.sin(angle) });
+            }
+            vertices.push({ x: cx, y: cy }); // Center point for connections
+
+            // Draw pentagrams (simplified visual)
+            drawPolygon(5, cx, cy, R * 0.8, rotation, false);
+            drawPolygon(5, cx, cy, R * 0.8, rotation + Math.PI / 5, false);
+
+            // Connect some vertices to approximate the icosahedron structure
+            for (let i = 0; i < 10; i += 2) {
+                drawLine(vertices[i].x, vertices[i].y, vertices[(i + 2) % 10].x, vertices[(i + 2) % 10].y);
+                drawLine(vertices[i].x, vertices[i].y, vertices[(i + 3) % 10].x, vertices[(i + 3) % 10].y);
+            }
+            drawCircle(cx, cy, R * 0.9); // Enclosing circle
+        }
+
+        // 8. Dodecaedro (simplified projection)
+        function drawDodecaedro(cx, cy, size, t) {
+            clearCanvas(cx, cy, size);
+            ctx.lineWidth = 1.5;
+            ctx.strokeStyle = "rgba(230,215,255,0.8)";
+            ctx.fillStyle = "rgba(230,215,255,0.05)";
+
+            const R = size * 0.7; // Circumradius
+            const rotation = t * 0.03;
+
+            // Outer pentagon
+            drawPolygon(5, cx, cy, R, rotation, false);
+
+            // Inner pentagon (inverted)
+            drawPolygon(5, cx, cy, R * 0.4, rotation + Math.PI / 5, false);
+
+            // Connect vertices for 3D effect
+            for (let i = 0; i < 5; i++) {
+                const angle1 = rotation + (i / 5) * Math.PI * 2;
+                const x1 = cx + R * Math.cos(angle1);
+                const y1 = cy + R * Math.sin(angle1);
+
+                const angle2 = rotation + Math.PI / 5 + (i / 5) * Math.PI * 2;
+                const x2 = cx + R * 0.4 * Math.cos(angle2);
+                const y2 = cy + R * 0.4 * Math.sin(angle2);
+                drawLine(x1, y1, x2, y2);
+            }
+
+            // Draw a central circle for depth
+            drawCircle(cx, cy, R * 0.2);
+        }
+
+        // 9. Vesica Piscis
+        function drawVesicaPiscis(cx, cy, size, t) {
+            clearCanvas(cx, cy, size);
+            ctx.lineWidth = 2.5;
+            ctx.strokeStyle = "rgba(230,215,255,0.95)";
+            ctx.fillStyle = "rgba(230,215,255,0.06)";
+
+            const radius = size * 0.45;
+            const offset = radius * 0.8; // Control overlap
+            const rotation = t * 0.03;
+
+            ctx.save();
+            ctx.translate(cx, cy);
+            ctx.rotate(rotation);
+
+            // Circle 1
+            ctx.beginPath();
+            ctx.arc(-offset / 2, 0, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.fill(); // Fill for a more defined shape
+
+            // Circle 2
+            ctx.beginPath();
+            ctx.arc(offset / 2, 0, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.fill();
+
+            ctx.restore();
+        }
+
+        // 10. Triângulo Sagrado
+        function drawTrianguloSagrado(cx, cy, size, t) {
+            clearCanvas(cx, cy, size);
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = "rgba(230,215,255,0.95)";
+            ctx.fillStyle = "rgba(230,215,255,0.08)";
+
+            const radius = size * 0.8;
+            const rotation = t * 0.05;
+
+            drawPolygon(3, cx, cy, radius, rotation, true);
+
+            // Add inner lines connecting to center for a "sacred" feel
+            for (let i = 0; i < 3; i++) {
+                const angle = rotation + (i / 3) * Math.PI * 2 - Math.PI / 2;
+                drawLine(cx, cy, cx + Math.cos(angle) * radius, cy + Math.sin(angle) * radius);
+            }
+        }
+
+        // 11. Espiral Áurea
+        function drawEspiralAurea(cx, cy, size, t) {
+            clearCanvas(cx, cy, size);
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = "rgba(230,215,255,0.9)";
+
+            const phi = (1 + Math.sqrt(5)) / 2; // Golden ratio
+            let currentSize = size * 0.8;
+            let currentX = cx - currentSize / 2;
+            let currentY = cy - currentSize / 2;
+
+            ctx.beginPath();
+            ctx.moveTo(currentX + currentSize, currentY + currentSize); // Start from bottom right of first square
+
+            for (let i = 0; i < 6; i++) { // Draw a few segments of the spiral
+                switch (i % 4) {
+                    case 0: // Arc to top-left
+                        ctx.arc(currentX + currentSize, currentY, currentSize, Math.PI / 2, Math.PI);
+                        currentX += currentSize / phi;
+                        currentY += currentSize / phi;
+                        currentSize /= phi;
+                        break;
+                    case 1: // Arc to top-right
+                        ctx.arc(currentX + currentSize, currentY, currentSize, Math.PI, Math.PI * 1.5);
+                        currentX += currentSize;
+                        currentY += currentSize / phi;
+                        currentSize /= phi;
+                        break;
+                    case 2: // Arc to bottom-right
+                        ctx.arc(currentX + currentSize, currentY, currentSize, Math.PI * 1.5, Math.PI * 2);
+                        currentX += currentSize;
+                        currentY += currentSize;
+                        currentSize /= phi;
+                        break;
+                    case 3: // Arc to bottom-left
+                        ctx.arc(currentX, currentY + currentSize, currentSize, 0, Math.PI / 2);
+                        currentX -= currentSize / phi;
+                        currentY += currentSize;
+                        currentSize /= phi;
+                        break;
+                }
+            }
+            ctx.stroke();
+
+            // Add a subtle effect
+            drawCircle(cx, cy, size * 0.1 * Math.sin(t*0.2) + size * 0.15);
+        }
+
+
+        // 12. Olho de Deus (Mandala)
+        function drawOlhoDeDeus(cx, cy, size, t) {
+            clearCanvas(cx, cy, size);
+            ctx.lineWidth = 1.5;
+            ctx.strokeStyle = "rgba(230,215,255,0.8)";
+            ctx.fillStyle = "rgba(230,215,255,0.05)";
+
+            const outerRadius = size * 0.8;
+            const numRays = 12;
+            const rotation = t * 0.04;
+
+            // Main eye shape
+            drawCircle(cx, cy, outerRadius * 0.6); // Outer iris
+            drawCircle(cx, cy, outerRadius * 0.3); // Inner iris
+            drawCircle(cx, cy, outerRadius * 0.1, true); // Pupil
+
+            // Rays
+            ctx.lineWidth = 1;
+            for (let i = 0; i < numRays; i++) {
+                const angle = rotation + (i / numRays) * Math.PI * 2;
+                drawLine(cx + Math.cos(angle) * outerRadius * 0.3, cy + Math.sin(angle) * outerRadius * 0.3,
+                         cx + Math.cos(angle) * outerRadius, cy + Math.sin(angle) * outerRadius);
+            }
+
+            // Outline
+            ctx.lineWidth = 2;
+            drawPolygon(numRays, cx, cy, outerRadius, rotation + Math.PI / numRays);
+        }
+
+        // 13. Flor de 12 Pétalas (Complex Mandala)
+        function drawFlorDe12Petalas(cx, cy, size, t) {
+            clearCanvas(cx, cy, size);
+            ctx.lineWidth = 1.5;
+            ctx.strokeStyle = "rgba(230,215,255,0.8)";
+            ctx.fillStyle = "rgba(230,215,255,0.04)";
+
+            const baseRadius = size * 0.15;
+            const rotation = t * 0.03;
+
+            // Central circle
+            drawCircle(cx, cy, baseRadius, true);
+
+            // Layers of petals
+            for (let layer = 0; layer < 3; layer++) {
+                const currentRadius = baseRadius * (layer + 1) * 1.8;
+                const numPetals = 12;
+                const layerRotation = rotation + layer * Math.PI / 12;
+
+                for (let i = 0; i < numPetals; i++) {
+                    const angle = layerRotation + (i / numPetals) * Math.PI * 2;
+                    const petalX = cx + Math.cos(angle) * currentRadius;
+                    const petalY = cy + Math.sin(angle) * currentRadius;
+
+                    ctx.beginPath();
+                    ctx.arc(petalX, petalY, baseRadius, 0, Math.PI * 2);
+                    ctx.stroke();
+                    ctx.fill();
+                }
+            }
+
+            // Outer circle
+            drawCircle(cx, cy, baseRadius * 3 * 1.8 + baseRadius);
+        }
+
+        // 14. Mandala do Coração (Heart shape with patterns)
+        function drawMandalaDoCoracao(cx, cy, size, t) {
+            clearCanvas(cx, cy, size);
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = "rgba(230,215,255,0.9)";
+            ctx.fillStyle = "rgba(230,215,255,0.06)";
+
+            const heartScale = size * 0.0008;
+            const rotation = t * 0.02;
+
+            ctx.save();
+            ctx.translate(cx, cy);
+            ctx.rotate(rotation);
+            ctx.scale(heartScale, heartScale);
+
+            ctx.beginPath();
+            ctx.moveTo(0, 20);
+            ctx.bezierCurveTo(25, 25, 25, -5, 0, -25);
+            ctx.bezierCurveTo(-25, -5, -25, 25, 0, 20);
+            ctx.closePath();
+            ctx.stroke();
+            ctx.fill();
+
+            // Inner heart
+            ctx.lineWidth = 1.5;
+            ctx.strokeStyle = "rgba(230,215,255,0.7)";
+            ctx.beginPath();
+            ctx.moveTo(0, 15);
+            ctx.bezierCurveTo(18, 18, 18, -3, 0, -18);
+            ctx.bezierCurveTo(-18, -3, -18, 18, 0, 15);
+            ctx.closePath();
+            ctx.stroke();
+
+            ctx.restore();
+
+            // Add a pulsating circle around it
+            const pulseRadius = size * 0.2 + Math.sin(t * 0.5) * size * 0.03;
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = "rgba(230,215,255,0.5)";
+            drawCircle(cx, cy, pulseRadius);
+        }
+
+        // 15. Nó Infinito
+        function drawNoInfinito(cx, cy, size, t) {
+            clearCanvas(cx, cy, size);
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = "rgba(230,215,255,0.95)";
+
+            const scale = size * 0.4;
+            const numSegments = 100;
+            const rotation = t * 0.02;
+            const speed = t * 0.05;
+
+            ctx.save();
+            ctx.translate(cx, cy);
+            ctx.rotate(rotation);
+
+            ctx.beginPath();
+            let start = speed % (Math.PI * 2);
+
+            for (let i = 0; i <= numSegments; i++) {
+                const angle = (i / numSegments) * Math.PI * 2 + start;
+                const x = scale * (Math.cos(angle) + Math.cos(2 * angle));
+                const y = scale * (Math.sin(angle) - Math.sin(2 * angle)); // This forms a type of knot
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        // 16. Campo Cristalino (Grid pattern)
+        function drawCampoCristalino(cx, cy, size, t) {
+            clearCanvas(cx, cy, size);
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = "rgba(230,215,255,0.6)";
+
+            const gridSize = size * 0.15;
+            const numLines = Math.floor(canvas.width / gridSize);
+            const offset = (t * 0.1 % 1) * gridSize;
+
+            for (let i = 0; i < numLines + 2; i++) {
+                // Vertical lines
+                drawLine(i * gridSize + offset - gridSize, 0, i * gridSize + offset - gridSize, canvas.height);
+                // Horizontal lines
+                drawLine(0, i * gridSize + offset - gridSize, canvas.width, i * gridSize + offset - gridSize);
+            }
+
+            // Add a central glow
+            const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, size * 0.7);
+            gradient.addColorStop(0, "rgba(200, 200, 255, 0.15)");
+            gradient.addColorStop(0.5, "rgba(200, 200, 255, 0.05)");
+            gradient.addColorStop(1, "rgba(200, 200, 255, 0)");
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // 17. Portão Estelar (Star pattern with concentric circles)
+        function drawPortaoEstelar(cx, cy, size, t) {
+            clearCanvas(cx, cy, size);
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = "rgba(230,215,255,0.9)";
+            ctx.fillStyle = "rgba(230,215,255,0.04)";
+
+            const outerRadius = size * 0.8;
+            const innerRadius = outerRadius * 0.4;
+            const numPoints = 8; // An 8-point star for a "gate" feel
+            const rotation = t * 0.04;
+
+            ctx.beginPath();
+            for (let i = 0; i < numPoints * 2; i++) {
+                const currentRadius = (i % 2 === 0) ? outerRadius : innerRadius;
+                const angle = rotation + (i / (numPoints * 2)) * Math.PI * 2 - Math.PI / 2;
+                ctx.lineTo(cx + Math.cos(angle) * currentRadius, cy + Math.sin(angle) * currentRadius);
+            }
+            ctx.closePath();
+            ctx.stroke();
+            ctx.fill();
+
+            // Concentric circles for the "gate" effect
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = "rgba(230,215,255,0.7)";
+            drawCircle(cx, cy, outerRadius * 0.6);
+            drawCircle(cx, cy, outerRadius * 0.3);
+        }
+
+        // 18. Mandala do Tempo (Clock-like structure)
+        function drawMandalaDoTempo(cx, cy, size, t) {
+            clearCanvas(cx, cy, size);
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = "rgba(230,215,255,0.9)";
+            ctx.fillStyle = "rgba(230,215,255,0.05)";
+
+            const radius = size * 0.8;
+            const numSegments = 12;
+            const rotation = -t * 0.02; // Rotate slowly backwards
+
+            // Outer circle
+            drawCircle(cx, cy, radius);
+
+            // Inner circle
+            drawCircle(cx, cy, radius * 0.4);
+
+            // Radiating lines
+            ctx.lineWidth = 1.5;
+            for (let i = 0; i < numSegments; i++) {
+                const angle = rotation + (i / numSegments) * Math.PI * 2;
+                drawLine(cx + Math.cos(angle) * radius * 0.4, cy + Math.sin(angle) * radius * 0.4,
+                         cx + Math.cos(angle) * radius, cy + Math.sin(angle) * radius);
+            }
+
+            // Small circles on segments
+            ctx.lineWidth = 1;
+            for (let i = 0; i < numSegments; i++) {
+                const angle = rotation + (i / numSegments) * Math.PI * 2;
+                drawCircle(cx + Math.cos(angle) * radius * 0.7, cy + Math.sin(angle) * radius * 0.7, radius * 0.08, true);
+            }
+        }
+
+        // 19. Coração Geométrico (Abstract heart from geometric shapes)
+        function drawCoracaoGeometrico(cx, cy, size, t) {
+            clearCanvas(cx, cy, size);
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = "rgba(230,215,255,0.9)";
+            ctx.fillStyle = "rgba(230,215,255,0.06)";
+
+            const baseSize = size * 0.2;
+            const rotation = t * 0.03;
+
+            ctx.save();
+            ctx.translate(cx, cy + baseSize * 0.8); // Shift up slightly to center the visual heart
+            ctx.rotate(rotation);
+
+            // Two circles at the top
+            drawCircle(-baseSize, -baseSize, baseSize, true);
+            drawCircle(baseSize, -baseSize, baseSize, true);
+
+            // Bottom triangle
+            ctx.beginPath();
+            ctx.moveTo(-baseSize * 2, 0);
+            ctx.lineTo(baseSize * 2, 0);
+            ctx.lineTo(0, baseSize * 2.5);
+            ctx.closePath();
+            ctx.stroke();
+            ctx.fill();
+
+            ctx.restore();
+
+            // Central glowing point
+            const glowRadius = baseSize * 0.1 + Math.sin(t*0.6) * baseSize * 0.05;
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = "rgba(255,255,255,0.4)";
+            ctx.fillStyle = "rgba(255,255,255,0.2)";
+            drawCircle(cx, cy, glowRadius, true);
+        }
+
+        // 20. Elo de Luz (Interconnected rings)
+        function drawEloDeLuz(cx, cy, size, t) {
+            clearCanvas(cx, cy, size);
+            ctx.lineWidth = 2.5;
+            ctx.strokeStyle = "rgba(230,215,255,0.9)";
+
+            const radius = size * 0.35;
+            const offset = radius * 1.2;
+            const rotation = t * 0.03;
+
+            // Ring 1
+            ctx.save();
+            ctx.translate(cx - offset, cy);
+            ctx.rotate(rotation);
+            drawCircle(0, 0, radius);
+            ctx.restore();
+
+            // Ring 2
+            ctx.save();
+            ctx.translate(cx + offset, cy);
+            ctx.rotate(-rotation);
+            drawCircle(0, 0, radius);
+            ctx.restore();
+
+            // Ring 3 (connecting)
+            ctx.save();
+            ctx.translate(cx, cy - offset * 0.8);
+            ctx.rotate(Math.PI / 2 + rotation);
+            drawCircle(0, 0, radius);
+            ctx.restore();
+
+            // Central glow
+            const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, size * 0.5);
+            gradient.addColorStop(0, "rgba(200, 200, 255, 0.15)");
+            gradient.addColorStop(0.8, "rgba(200, 200, 255, 0)");
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // 21. Prisma de Frequência (Rainbow-like effect, layered shapes)
+        function drawPrismaDeFrequencia(cx, cy, size, t) {
+            clearCanvas(cx, cy, size);
+
+            const baseRadius = size * 0.8;
+            const numLayers = 5;
+            const rotation = t * 0.05;
+
+            // Colors for gradient (simplified rainbow)
+            const colors = [
+                "rgba(255, 0, 0, 0.1)",   // Red
+                "rgba(255, 165, 0, 0.1)", // Orange
+                "rgba(255, 255, 0, 0.1)", // Yellow
+                "rgba(0, 255, 0, 0.1)",   // Green
+                "rgba(0, 0, 255, 0.1)",   // Blue
+                "rgba(128, 0, 128, 0.1)"  // Purple
+            ];
+
+            for (let i = 0; i < numLayers; i++) {
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.rotate(rotation + i * Math.PI / (numLayers * 4));
+
+                const currentRadius = baseRadius - (i * (baseRadius / numLayers)) * 0.8;
+                ctx.lineWidth = 1 + (numLayers - i) * 0.5;
+                ctx.strokeStyle = `rgba(230,215,255, ${0.4 + i * 0.1})`;
+                ctx.fillStyle = colors[i % colors.length];
+
+                drawPolygon(6 + i, 0, 0, currentRadius, 0, true); // Hexagon, then heptagon, etc.
+                ctx.stroke();
+                ctx.restore();
+            }
+        }
+
+
+        // Map card index to drawing function
+        const drawFunctions = [
+            drawFlorDaVida,         // 0
+            drawSementeDaVida,      // 1
+            drawMerkaba,            // 2
+            drawCuboDeMetatron,     // 3
+            drawTetraedro,          // 4
+            drawHexagrama,          // 5
+            drawOctaedro,           // 6
+            drawIcosaedro,          // 7
+            drawDodecaedro,         // 8
+            drawVesicaPiscis,       // 9
+            drawTrianguloSagrado,   // 10
+            drawEspiralAurea,       // 11
+            drawOlhoDeDeus,         // 12
+            drawFlorDe12Petalas,    // 13
+            drawMandalaDoCoracao,   // 14
+            drawNoInfinito,         // 15
+            drawCampoCristalino,    // 16
+            drawPortaoEstelar,      // 17
+            drawMandalaDoTempo,     // 18
+            drawCoracaoGeometrico,  // 19
+            drawEloDeLuz,           // 20
+            drawPrismaDeFrequencia  // 21
+        ];
+
+        let currentCardIndex = -1; // To store the currently drawn card index
+        let animationStartTime = 0;
+
+        function animateGeometry(timestamp) {
+            if (!animationStartTime) animationStartTime = timestamp;
+            const elapsed = timestamp - animationStartTime;
+            const t = elapsed * 0.001; // Time in seconds for animations
+
+            resizeCanvas();
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+            const size = Math.min(canvas.width, canvas.height) * 0.4;
+
+            if (currentCardIndex !== -1 && drawFunctions[currentCardIndex]) {
+                drawFunctions[currentCardIndex](cx, cy, size, t);
+            }
+
+            animationFrameId = requestAnimationFrame(animateGeometry);
+        }
+
+        function drawCard(initialLoad = false){
+            loadingOverlay.classList.add('active'); // Show loading spinner
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+            }
+
+            // Simulate a slight delay for drawing complex geometries
+            setTimeout(() => {
+                let newIndex;
+                do {
+                    newIndex = Math.floor(Math.random() * cards.length);
+                } while (!initialLoad && newIndex === currentCardIndex); // Ensure a new card is drawn unless it's the initial load
+
+                currentCardIndex = newIndex;
+                const card = cards[currentIndex];
+
+                symName.textContent = card.name;
+                meaning.textContent = card.meaning;
+                message.textContent = card.message;
+                cardNumber.textContent = currentCardIndex + 1;
+
+                // Restart animation
+                animationStartTime = 0;
+                animationFrameId = requestAnimationFrame(animateGeometry);
+
+                // Add reveal animation
+                [symName, meaning, message].forEach(el => {
+                    el.classList.add('reveal');
+                    setTimeout(() => el.classList.remove('reveal'), 600);
+                });
+
+                loadingOverlay.classList.remove('active'); // Hide loading spinner
+            }, 300); // Small delay to show spinner and for smooth transition
+        }
+
+
+        drawBtn.addEventListener('click', () => drawCard(false));
+        shareBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(location.href)
+            .then(() => {
+                shareBtn.textContent = "Link copiado!";
+                setTimeout(() => shareBtn.textContent = "Compartilhar link", 1400);
+            })
+            .catch(err => console.error('Failed to copy: ', err));
+        });
+
+        window.addEventListener('load', () => {
+            resizeCanvas(); // Initial resize
+            drawCard(true); // Draw a card on initial load
+        });
+        window.addEventListener('resize', () => {
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+            }
+            animationStartTime = 0; // Reset time for animation
+            animationFrameId = requestAnimationFrame(animateGeometry);
+        });
+    </script>
 </body>
 </html>
-
