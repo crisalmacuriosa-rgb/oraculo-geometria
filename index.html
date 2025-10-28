@@ -1,497 +1,212 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Oráculo da Geometria Sagrada — 22 Cartas</title>
-<style>
-  :root{
-    --bg:#0b0226;
-    --panel:#120428;
-    --accent:#caa32a;
-    --muted:#b9a6f0;
-    --glass: rgba(255,255,255,0.04);
-  }
-  html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;}
-  body{
-    background: radial-gradient(1200px 600px at 10% 20%, rgba(90,19,150,0.18), transparent 10%),
-                radial-gradient(1000px 500px at 90% 80%, rgba(200,140,255,0.06), transparent 10%),
-                var(--bg);
-    color:#efe8ff;
-    display:flex;align-items:center;justify-content:center;padding:24px;
-  }
-  .card{
-    width:100%;
-    max-width:920px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    border-radius:16px;
-    box-shadow: 0 10px 30px rgba(10,5,20,0.6);
-    overflow:hidden;
-    display:grid;
-    grid-template-columns: 420px 1fr;
-    gap:1px;
-    border: 1px solid rgba(202,163,42,0.08);
-  }
-  .left{
-    padding:26px;
-    background: linear-gradient(135deg, rgba(18,4,40,0.6), rgba(40,10,60,0.35));
-    display:flex;flex-direction:column;align-items:center;justify-content:center;
-  }
-  canvas{background:transparent;border-radius:12px;width:360px;height:360px;box-shadow: inset 0 0 40px rgba(0,0,0,0.3);}
-  .title{font-size:20px;letter-spacing:0.6px;color:var(--muted);margin-bottom:8px;}
-  h1{margin:0;font-size:24px;color:#fff;text-align:center;}
-  .btn{
-    margin-top:18px;
-    background:linear-gradient(180deg, #6f2ecb, #512092);
-    border: none;
-    color:white;padding:10px 18px;border-radius:12px;font-weight:600;cursor:pointer;
-    box-shadow: 0 6px 18px rgba(93,26,150,0.35);
-  }
-  .right{
-    padding:26px 28px; display:flex;flex-direction:column; gap:12px;
-    background: linear-gradient(180deg, rgba(6,2,20,0.2), rgba(8,2,30,0.1));
-  }
-  .meta{display:flex;align-items:center;gap:12px;}
-  .num-badge{
-    background:linear-gradient(180deg,#caa32a,#9e7718);padding:8px 12px;border-radius:12px;font-weight:700;color:#140308;
-    box-shadow: 0 6px 12px rgba(202,163,42,0.12);
-  }
-  .sym-name{font-size:20px;margin:0;color:#fff;}
-  .meaning{color: #dcd2ff; opacity:0.95; font-size:15px; line-height:1.5;}
-  .message{background:var(--glass);border-radius:10px;padding:12px;color:#f7ecff;font-style:italic;}
-  .controls{display:flex;gap:10px;align-items:center;margin-top:8px;}
-  .small{font-size:13px;color:#bfb0ff;}
-  footer{padding:14px;text-align:center;color:#b9a6f0;background:linear-gradient(180deg,transparent, rgba(255,255,255,0.01));}
-  @media(max-width:880px){
-    .card{grid-template-columns:1fr;max-width:640px;}
-    canvas{width:280px;height:280px;}
-  }
-  /* subtle animation */
-  .reveal {
-    transform-origin:50% 50%;
-    animation: pop .6s cubic-bezier(.2,.9,.34,1) both;
-  }
-  @keyframes pop {
-    from { opacity:0; transform: scale(.86) rotate(-6deg); filter: blur(6px); }
-    to { opacity:1; transform: scale(1) rotate(0); filter: blur(0); }
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Oráculo da Geometria Sagrada — 22 Cartas</title>
+  <style>
+    :root{
+      --bg:#0b0226;
+      --panel:#120428;
+      --accent:#caa32a;
+      --muted:#b9a6f0;
+      --glass: rgba(255,255,255,0.04);
+    }
+    html,body{
+      height:100%;margin:0;
+      font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;
+    }
+    body{
+      background: radial-gradient(1200px 600px at 10% 20%, rgba(90,19,150,0.18), transparent 10%),
+                  radial-gradient(1000px 500px at 90% 80%, rgba(200,140,255,0.06), transparent 10%),
+                  var(--bg);
+      color:#efe8ff;
+      display:flex;align-items:center;justify-content:center;
+      padding:24px;
+    }
+    .card{
+      width:100%;max-width:920px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:16px;
+      box-shadow: 0 10px 30px rgba(10,5,20,0.6);
+      overflow:hidden;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:1px;
+      border: 1px solid rgba(202,163,42,0.08);
+    }
+    .left{
+      padding:26px;
+      background: linear-gradient(135deg, rgba(18,4,40,0.6), rgba(40,10,60,0.35));
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+    }
+    canvas{
+      background:transparent;border-radius:12px;
+      width:100%;max-width:360px;
+      aspect-ratio:1/1;
+      box-shadow: inset 0 0 40px rgba(0,0,0,0.3);
+    }
+    .title{font-size:20px;letter-spacing:0.6px;color:var(--muted);margin-bottom:8px;}
+    h1{margin:0;font-size:24px;color:#fff;text-align:center;}
+    .btn{
+      margin-top:18px;
+      background:linear-gradient(180deg, #6f2ecb, #512092);
+      border:none;color:white;padding:10px 18px;border-radius:12px;font-weight:600;cursor:pointer;
+      box-shadow: 0 6px 18px rgba(93,26,150,0.35);
+      transition: transform 0.2s;
+    }
+    .btn:hover{transform:scale(1.05);}
+    .right{
+      padding:26px 28px;
+      display:flex;flex-direction:column;gap:12px;
+      background: linear-gradient(180deg, rgba(6,2,20,0.2), rgba(8,2,30,0.1));
+    }
+    .meta{display:flex;align-items:center;gap:12px;}
+    .num-badge{
+      background:linear-gradient(180deg,#caa32a,#9e7718);
+      padding:8px 12px;border-radius:12px;font-weight:700;color:#140308;
+      box-shadow: 0 6px 12px rgba(202,163,42,0.12);
+    }
+    .sym-name{font-size:20px;margin:0;color:#fff;}
+    .meaning, .message{color:#dcd2ff;opacity:0.95;font-size:15px;line-height:1.5;}
+    .message{background:var(--glass);border-radius:10px;padding:12px;color:#f7ecff;font-style:italic;}
+    .controls{display:flex;gap:10px;align-items:center;margin-top:8px;flex-wrap:wrap;}
+    .small{font-size:13px;color:#bfb0ff;}
+    footer{padding:14px;text-align:center;color:#b9a6f0;background:linear-gradient(180deg,transparent,rgba(255,255,255,0.01));}
+    @media(max-width:880px){
+      .card{grid-template-columns:1fr;max-width:640px;}
+      canvas{width:280px;height:280px;}
+    }
+    .reveal {
+      transform-origin:50% 50%;
+      animation: pop .6s cubic-bezier(.2,.9,.34,1) both;
+    }
+    @keyframes pop {
+      from {opacity:0;transform:scale(.86) rotate(-6deg);filter:blur(6px);}
+      to {opacity:1;transform:scale(1) rotate(0);filter:blur(0);}
+    }
+  </style>
 </head>
 <body>
-  <div class="card" role="application" aria-label="Oráculo da Geometria Sagrada">
+  <div class="card">
     <div class="left">
-      <div class="title">Oráculo da Geometria Sagrada</div>
-      <h1>Escolha o invisível — deixe o número escolher você</h1>
-      <canvas id="artCanvas" width="720" height="720" aria-hidden="false"></canvas>
-      <div style="display:flex;gap:10px;margin-top:16px;">
+      <canvas id="artCanvas" width="400" height="400"></canvas>
+      <div class="controls">
         <button id="drawBtn" class="btn">Sortear Carta</button>
-        <button id="shareBtn" class="btn" style="background:transparent;border:1px solid rgba(202,163,42,0.12);color:var(--muted);">Compartilhar link</button>
+        <button id="shareBtn" class="btn">Compartilhar link</button>
       </div>
     </div>
     <div class="right">
       <div class="meta">
-        <div class="num-badge" id="numBadge">—</div>
-        <div style="flex:1">
-          <p class="sym-name" id="symName">Clique em "Sortear Carta"</p>
-          <div class="small" id="symSub">22 cartas – geometria sagrada</div>
-        </div>
+        <div class="num-badge" id="cardNumber">—</div>
+        <h2 class="sym-name" id="symName">Clique em "Sortear Carta"</h2>
       </div>
-
       <div>
         <h3 style="margin:0;font-size:16px;color:var(--accent)">Significado</h3>
         <p class="meaning" id="meaning">Aguardando sorteio...</p>
       </div>
-
       <div>
         <h3 style="margin:0;font-size:16px;color:var(--accent)">Mensagem</h3>
         <div class="message" id="message">Quando a carta aparecer, respire fundo e leia com atenção.</div>
       </div>
-
       <div style="margin-top:auto">
-        <div class="small">Dica: abra este link em celular ou desktop. Cada visitante que clicar fará um sorteio ao pressionar "Sortear Carta".</div>
+        <div class="small">Dica: cada visitante que clicar faz seu próprio sorteio.</div>
       </div>
     </div>
   </div>
-
   <footer>Oráculo criado por você • Visual místico • Som suave integrado</footer>
 
-<script>
-/* ====== Dados das 22 cartas ====== */
-const cards = [
-  {name:"Flor da Vida", key:"Flor da Vida", meaning:"Matriz da criação; unidade e interconexão de todas as coisas.", message:"Conecte-se ao padrão que sustenta sua vida. Permita a harmonia."},
-  {name:"Semente da Vida", key:"Semente da Vida", meaning:"Germinação de potenciais; início de ciclos criativos.", message:"Uma ideia plantada hoje pode florescer de forma inesperada."},
-  {name:"Merkaba", key:"Merkaba", meaning:"Campo de luz e transmutação; equilíbrio entre masculino e feminino divino.", message:"Proteja seu campo e sinta a dança entre céu e terra."},
-  {name:"Cubo de Metatron", key:"Cubo de Metatron", meaning:"Estrutura divina da manifestação; ordem cósmica.", message:"Organize o caos em formas que sirvam sua evolução."},
-  {name:"Tetraedro", key:"Tetraedro", meaning:"Elemento fogo; impulso criativo e ação transformadora.", message:"Aja com coragem e clareza. O movimento traz mudança."},
-  {name:"Hexagrama", key:"Hexagrama", meaning:"Equilíbrio entre opostos; união do espiritual e do material.", message:"Integre dentro de você o que parecia separado."},
-  {name:"Octaedro", key:"Octaedro", meaning:"Elemento ar; clareza mental e comunhão.", message:"Ouça com mente serena o que o silêncio revela."},
-  {name:"Icosaedro", key:"Icosaedro", meaning:"Elemento água; fluidez emocional e intuição.", message:"Deixe as emoções guiarem com sabedoria, não com pressa."},
-  {name:"Dodecaedro", key:"Dodecaedro", meaning:"O éter; sabedoria universal e ponte para o espiritual.", message:"Busque o sentido que atravessa o tempo e as formas."},
-  {name:"Vesica Piscis", key:"Vesica Piscis", meaning:"Porta de transformação e nascimento entre dois mundos.", message:"Permita o encontro criar novas possibilidades."},
-  {name:"Triângulo Sagrado", key:"Triângulo Sagrado", meaning:"Trindade: corpo, mente e espírito em alinhamento.", message:"Equilibre suas três centrais para agir com integridade."},
-  {name:"Espiral Áurea", key:"Espiral Áurea", meaning:"Crescimento harmonioso seguindo a proporção da vida.", message:"Expanda devagar, respeitando ritmo interior."},
-  {name:"Olho de Deus", key:"Olho de Deus", meaning:"Percepção ampliada; visão que observa sem julgar.", message:"Veja além do imediato com compaixão."},
-  {name:"Flor de 12 Pétalas", key:"Flor12", meaning:"Ciclo completo; integração dos ritmos naturais.", message:"Feche o ciclo com gratidão e comece um novo com confiança."},
-  {name:"Mandala do Coração", key:"MandalaCoração", meaning:"Centro do amor; harmoniza relacionamentos e propósito.", message:"O que você dá em amor volta em sustento."},
-  {name:"Nó Infinito", key:"Nó Infinito", meaning:"Conexão eterna e fluxo contínuo da energia vital.", message:"Cultive presença no movimento contínuo da vida."},
-  {name:"Campo Cristalino", key:"CampoCristal", meaning:"Claridade, memória da Terra e cura através da luz.", message:"Permita que memórias curativas venham à superfície."},
-  {name:"Portão Estelar", key:"PortaoEstelar", meaning:"Abertura para dimensões sutis e caminhos de insight.", message:"Confie nos sinais que chegam em sonho e intuição."},
-  {name:"Mandala do Tempo", key:"MandalaTempo", meaning:"Ritmos e ciclos; lembrete de paciência e sincronias.", message:"O tempo é tutor — aprenda seus compassos."},
-  {name:"Coração Geométrico", key:"CorGeometrico", meaning:"Amor alinhado à estrutura sagrada; coerência íntima.", message:"Atue a partir do coração alinhado com sua verdade."},
-  {name:"Elo de Luz", key:"EloLuz", meaning:"União entre almas; círculos de suporte e cura.", message:"Procure quem reflete seu melhor e ofereça reciprocidade."},
-  {name:"Prisma de Frequência", key:"PrismaFreq", meaning:"Desdobramento de luz; multiplicação de possibilidades.", message:"Quando você muda a frequência, a realidade responde."}
-];
+  <script>
+    const cards = [
+      {name:"Flor da Vida", meaning:"Matriz da criação; unidade e interconexão de todas as coisas.", message:"Conecte-se ao padrão que sustenta sua vida. Permita a harmonia."},
+      {name:"Semente da Vida", meaning:"Germinação de potenciais; início de ciclos criativos.", message:"Uma ideia plantada hoje pode florescer de forma inesperada."},
+      {name:"Merkaba", meaning:"Campo de luz e transmutação; equilíbrio entre masculino e feminino divino.", message:"Proteja seu campo e sinta a dança entre céu e terra."},
+      {name:"Cubo de Metatron", meaning:"Estrutura divina da manifestação; ordem cósmica.", message:"Organize o caos em formas que sirvam sua evolução."},
+      {name:"Tetraedro", meaning:"Elemento fogo; impulso criativo e ação transformadora.", message:"Aja com coragem e clareza. O movimento traz mudança."},
+      {name:"Hexagrama", meaning:"Equilíbrio entre opostos; união do espiritual e do material.", message:"Integre dentro de você o que parecia separado."},
+      {name:"Octaedro", meaning:"Elemento ar; clareza mental e comunhão.", message:"Ouça com mente serena o que o silêncio revela."},
+      {name:"Icosaedro", meaning:"Elemento água; fluidez emocional e intuição.", message:"Deixe as emoções guiarem com sabedoria, não com pressa."},
+      {name:"Dodecaedro", meaning:"O éter; sabedoria universal e ponte para o espiritual.", message:"Busque o sentido que atravessa o tempo e as formas."},
+      {name:"Vesica Piscis", meaning:"Porta de transformação e nascimento entre dois mundos.", message:"Permita o encontro criar novas possibilidades."},
+      {name:"Triângulo Sagrado", meaning:"Trindade: corpo, mente e espírito em alinhamento.", message:"Equilibre suas três centrais para agir com integridade."},
+      {name:"Espiral Áurea", meaning:"Crescimento harmonioso seguindo a proporção da vida.", message:"Expanda devagar, respeitando seu ritmo interior."},
+      {name:"Olho de Deus", meaning:"Percepção ampliada; visão que observa sem julgar.", message:"Veja além do imediato com compaixão."},
+      {name:"Flor de 12 Pétalas", meaning:"Ciclo completo; integração dos ritmos naturais.", message:"Feche o ciclo com gratidão e comece um novo com confiança."},
+      {name:"Mandala do Coração", meaning:"Centro do amor; harmoniza relacionamentos e propósito.", message:"O que você dá em amor volta em sustento."},
+      {name:"Nó Infinito", meaning:"Conexão eterna e fluxo contínuo da energia vital.", message:"Cultive presença no movimento contínuo da vida."},
+      {name:"Campo Cristalino", meaning:"Claridade, memória da Terra e cura através da luz.", message:"Permita que memórias curativas venham à superfície."},
+      {name:"Portão Estelar", meaning:"Abertura para dimensões sutis e caminhos de insight.", message:"Confie nos sinais que chegam em sonho e intuição."},
+      {name:"Mandala do Tempo", meaning:"Ritmos e ciclos; lembrete de paciência e sincronias.", message:"O tempo é tutor — aprenda seus compassos."},
+      {name:"Coração Geométrico", meaning:"Amor alinhado à estrutura sagrada; coerência íntima.", message:"Atue a partir do coração alinhado com sua verdade."},
+      {name:"Elo de Luz", meaning:"União entre almas; círculos de suporte e cura.", message:"Procure quem reflete seu melhor e ofereça reciprocidade."},
+      {name:"Prisma de Frequência", meaning:"Desdobramento de luz; multiplicação de possibilidades.", message:"Quando você muda a frequência, a realidade responde."}
+    ];
 
-/* ====== Canvas drawing utilities ====== */
-const canvas = document.getElementById('artCanvas');
-const ctx = canvas.getContext('2d');
+    const canvas = document.getElementById('artCanvas');
+    const ctx = canvas.getContext('2d');
 
-function clearCanvas(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  // background glow
-  const g = ctx.createRadialGradient(canvas.width*0.5,canvas.height*0.5,40, canvas.width*0.5,canvas.height*0.5,520);
-  g.addColorStop(0, "rgba(170,120,255,0.12)");
-  g.addColorStop(0.6, "rgba(60,20,80,0.04)");
-  g.addColorStop(1, "rgba(6,2,20,0.0)");
-  ctx.fillStyle = g;
-  ctx.fillRect(0,0,canvas.width,canvas.height);
-}
-
-/* draw different geometric motifs per index */
-function drawGeometry(idx){
-  clearCanvas();
-  const cx = canvas.width/2, cy = canvas.height/2;
-  const size = Math.min(canvas.width, canvas.height)*0.34;
-  ctx.save();
-  ctx.translate(cx, cy);
-  // subtle rotation animation
-  const t = Date.now() * 0.00012;
-  ctx.rotate(Math.sin(t + idx)*0.02);
-
-  // glow circle
-  const radial = ctx.createRadialGradient(0,0,size*0.2, 0,0,size*1.2);
-  radial.addColorStop(0, "rgba(250,230,180,0.06)");
-  radial.addColorStop(1, "rgba(60,20,80,0)");
-  ctx.fillStyle = radial;
-  ctx.beginPath(); ctx.arc(0,0,size*1.1,0,Math.PI*2); ctx.fill();
-
-  // draw core shapes
-  ctx.lineWidth = 4;
-  ctx.strokeStyle = "rgba(230,215,255,0.96)";
-  ctx.globalCompositeOperation = "lighter";
-
-  function poly(sides, r, rotation=0){
-    ctx.beginPath();
-    for(let i=0;i<sides;i++){
-      const a = rotation + i*(Math.PI*2/sides);
-      const x = Math.cos(a)*r, y = Math.sin(a)*r;
-      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    function clearCanvas(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      const g = ctx.createRadialGradient(canvas.width/2,canvas.height/2,40,canvas.width/2,canvas.height/2,520);
+      g.addColorStop(0,"rgba(170,120,255,0.12)");
+      g.addColorStop(0.6,"rgba(60,20,80,0.04)");
+      g.addColorStop(1,"rgba(6,2,20,0)");
+      ctx.fillStyle = g;
+      ctx.fillRect(0,0,canvas.width,canvas.height);
     }
-    ctx.closePath(); ctx.stroke();
-  }
 
-  switch(idx){
-    case 0: // Flor da Vida (overlapping circles)
-      ctx.lineWidth=3.2;
-      const R = size*0.45;
-      for(let y=-1;y<=1;y++){
-        for(let x=-1;x<=1;x++){
-          ctx.beginPath();
-          ctx.arc(x*R, y*R, R, 0, Math.PI*2);
-          ctx.stroke();
-        }
-      }
-      ctx.beginPath(); ctx.arc(0,0,R); ctx.stroke();
-      break;
-    case 1: // Semente da Vida
+    function drawGeometry(idx){
+      clearCanvas();
+      const cx=canvas.width/2, cy=canvas.height/2;
+      const size=Math.min(canvas.width,canvas.height)*0.34;
+      ctx.save();
+      ctx.translate(cx,cy);
+      const t=Date.now()*0.00012;
+      ctx.rotate(Math.sin(t+idx)*0.02);
       ctx.lineWidth=3;
-      for(let i=0;i<7;i++){
-        ctx.beginPath();
-        ctx.arc(0,0, R*0.5 + i*6, 0, Math.PI*2);
-        ctx.stroke();
-      }
-      break;
-    case 2: // Merkaba (star tetra)
-      // draw two triangles rotated
-      ctx.lineWidth=3.5;
+      ctx.strokeStyle="rgba(230,215,255,0.9)";
       ctx.beginPath();
-      ctx.moveTo(0,-size*0.6); ctx.lineTo(size*0.52, size*0.3); ctx.lineTo(-size*0.52, size*0.3); ctx.closePath(); ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(0,size*0.6); ctx.lineTo(size*0.52,-size*0.3); ctx.lineTo(-size*0.52,-size*0.3); ctx.closePath(); ctx.stroke();
-      break;
-    case 3: // Cube of Metatron (central circle + lines)
-      ctx.lineWidth=2.6;
-      // circle + hexagon + internal triads
-      poly(6, size*0.52, Math.PI/6);
-      poly(3, size*0.48, 0);
       for(let i=0;i<6;i++){
-        const a = i*Math.PI/3;
-        ctx.beginPath();
-        ctx.moveTo(Math.cos(a)*size*0.48, Math.sin(a)*size*0.48);
-        ctx.lineTo(Math.cos(a)*size*0.2, Math.sin(a)*size*0.2);
-        ctx.stroke();
+        const angle=(i/6)*Math.PI*2;
+        ctx.lineTo(Math.cos(angle)*size,Math.sin(angle)*size);
       }
-      break;
-    case 4: // Tetraedro stylized
-      ctx.lineWidth=3.6;
-      poly(3, size*0.64, Math.PI/2);
-      break;
-    case 5: // Hexagrama (star of David)
-      ctx.lineWidth=3.2;
-      poly(3, size*0.48, 0);
-      ctx.save(); ctx.rotate(Math.PI/3); poly(3, size*0.48, 0); ctx.restore();
-      break;
-    case 6: // Octaedro stylized (diamond shape)
-      ctx.lineWidth=3.2;
-      ctx.beginPath(); ctx.moveTo(0,-size*0.6); ctx.lineTo(size*0.42,0); ctx.lineTo(0,size*0.6); ctx.lineTo(-size*0.42,0); ctx.closePath(); ctx.stroke();
-      break;
-    case 7: // Icosaedro (many-point star ring)
-      ctx.lineWidth=2.4;
-      for(let i=0;i<20;i++){
-        const a = i*(Math.PI*2/20);
-        ctx.beginPath();
-        ctx.moveTo(Math.cos(a)*size*0.6, Math.sin(a)*size*0.6);
-        ctx.lineTo(Math.cos(a+Math.PI)*size*0.18, Math.sin(a+Math.PI)*size*0.18);
-        ctx.stroke();
-      }
-      break;
-    case 8: // Dodecaedro impression (pentagons)
-      ctx.lineWidth=2.8;
-      for(let i=0;i<5;i++){
-        ctx.save();
-        ctx.rotate(i*(Math.PI*2/5));
-        poly(5, size*0.22, Math.PI/5);
-        ctx.restore();
-      }
-      break;
-    case 9: // Vesica Piscis
-      ctx.lineWidth=3;
-      ctx.beginPath(); ctx.arc(-size*0.18,0,size*0.36,0,Math.PI*2); ctx.stroke();
-      ctx.beginPath(); ctx.arc(size*0.18,0,size*0.36,0,Math.PI*2); ctx.stroke();
-      break;
-    case 10: // Triângulo Sagrado
-      ctx.lineWidth=3.6;
-      poly(3, size*0.6, -Math.PI/2);
-      // internal small triangle
-      poly(3, size*0.22, -Math.PI/2);
-      break;
-    case 11: // Espiral Áurea
-      ctx.lineWidth=3;
-      for(let i=0;i<8;i++){
-        ctx.beginPath();
-        const a= i*0.9;
-        ctx.arc( Math.cos(a)*i*8, Math.sin(a)*i*8, i*6+6, 0, Math.PI*1.6);
-        ctx.stroke();
-      }
-      break;
-    case 12: // Olho de Deus (central eye + ring)
-      ctx.lineWidth=3;
-      ctx.beginPath(); ctx.ellipse(0,0,size*0.6,size*0.34,0,0,2*Math.PI); ctx.stroke();
-      ctx.beginPath(); ctx.arc(0,0,size*0.14,0,Math.PI*2); ctx.fillStyle="rgba(250,240,255,0.9)"; ctx.fill();
+      ctx.closePath();
       ctx.stroke();
-      break;
-    case 13: // Flor de 12 pétalas (radial petals)
-      ctx.lineWidth=2.6;
-      for(let i=0;i<12;i++){
-        const a = i*Math.PI*2/12;
-        ctx.beginPath();
-        ctx.moveTo(Math.cos(a)*size*0.08, Math.sin(a)*size*0.08);
-        ctx.quadraticCurveTo(Math.cos(a)*size*0.36, Math.sin(a)*size*0.36, Math.cos(a)*size*0.72, Math.sin(a)*size*0.72);
-        ctx.stroke();
-      }
-      break;
-    case 14: // Mandala do Coração (heart-like geometry)
-      ctx.lineWidth=3;
-      // stylized heart made by two circles + triangle
-      ctx.beginPath(); ctx.arc(-size*0.18,-size*0.06,size*0.2,0,Math.PI*2); ctx.stroke();
-      ctx.beginPath(); ctx.arc(size*0.18,-size*0.06,size*0.2,0,Math.PI*2); ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(-size*0.34,0); ctx.quadraticCurveTo(0,size*0.46, size*0.34,0); ctx.stroke();
-      break;
-    case 15: // Nó Infinito
-      ctx.lineWidth=3;
-      for(let i=0;i<3;i++){
-        ctx.beginPath();
-        ctx.ellipse(Math.cos(i*2.1)*size*0.18, Math.sin(i*2.1)*size*0.18, size*0.36, size*0.12, i*0.9, 0, Math.PI*2);
-        ctx.stroke();
-      }
-      break;
-    case 16: // Campo Cristalino (faceted prism)
-      ctx.lineWidth=2.6;
-      ctx.beginPath();
-      ctx.moveTo(0,-size*0.7); ctx.lineTo(size*0.35,-size*0.12); ctx.lineTo(size*0.08,size*0.62); ctx.lineTo(-size*0.28,size*0.62); ctx.lineTo(-size*0.6,-size*0.05); ctx.closePath(); ctx.stroke();
-      break;
-    case 17: // Portão Estelar (arches)
-      ctx.lineWidth=3;
-      for(let i=0;i<5;i++){
-        ctx.beginPath();
-        ctx.arc(0,0,size*0.18 + i*28, Math.PI*1.15, Math.PI*1.95);
-        ctx.stroke();
-      }
-      break;
-    case 18: // Mandala do Tempo (concentric rings)
-      ctx.lineWidth=2.4;
-      for(let i=1;i<=9;i++){
-        ctx.beginPath();
-        ctx.arc(0,0,i*(size*0.08),0,Math.PI*2);
-        ctx.stroke();
-      }
-      break;
-    case 19: // Coração Geométrico
-      ctx.lineWidth=3.2;
-      poly(6, size*0.38, Math.PI/6);
-      ctx.beginPath(); ctx.moveTo(0,-size*0.2); ctx.lineTo(size*0.28,0); ctx.lineTo(0,size*0.28); ctx.lineTo(-size*0.28,0); ctx.closePath(); ctx.stroke();
-      break;
-    case 20: // Elo de Luz (interconexões)
-      ctx.lineWidth=2.6;
-      for(let i=0;i<10;i++){
-        ctx.beginPath();
-        ctx.moveTo(Math.cos(i)*size*0.6, Math.sin(i)*size*0.6);
-        ctx.lineTo(Math.cos(i+3.2)*size*0.34, Math.sin(i+3.2)*size*0.34);
-        ctx.stroke();
-      }
-      break;
-    case 21: // Prisma de Frequência (radiant rays)
-      ctx.lineWidth=2.8;
-      for(let i=0;i<18;i++){
-        const a = i*Math.PI*2/18;
-        ctx.beginPath();
-        ctx.moveTo(0,0);
-        ctx.lineTo(Math.cos(a)*size*0.9, Math.sin(a)*size*0.9);
-        ctx.stroke();
-      }
-      break;
-    default:
-      ctx.fillStyle = "rgba(255,255,255,0.06)"; ctx.fillRect(-size/2,-size/2,size,size);
-  }
-  ctx.restore();
-}
+      ctx.restore();
+    }
 
-/* ====== Sound: simple taça-like tone using WebAudio ====== */
-let audioCtx, masterGain;
-function initAudio(){
-  if(audioCtx) return;
-  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  masterGain = audioCtx.createGain(); masterGain.gain.value = 0.000; masterGain.connect(audioCtx.destination);
-}
-function playBell(freq=440){
-  initAudio();
-  const now = audioCtx.currentTime;
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-  const mod = audioCtx.createOscillator();
+    function randomIndex(){return Math.floor(Math.random()*cards.length);}
+    const drawBtn=document.getElementById('drawBtn');
+    const shareBtn=document.getElementById('shareBtn');
+    const symName=document.getElementById('symName');
+    const meaning=document.getElementById('meaning');
+    const message=document.getElementById('message');
+    const cardNumber=document.getElementById('cardNumber');
 
-  // carrier
-  osc.type = "sine";
-  osc.frequency.value = freq * (0.98 + Math.random()*0.04);
-  // slight frequency modulation adds metallic timbre
-  mod.type = "sine"; mod.frequency.value = 0.5 + Math.random();
-  const modGain = audioCtx.createGain(); modGain.gain.setValueAtTime(20, now);
-  mod.connect(modGain); modGain.connect(osc.frequency);
+    drawBtn.addEventListener('click',()=>{
+      const idx=randomIndex();
+      const card=cards[idx];
+      symName.textContent=card.name;
+      meaning.textContent=card.meaning;
+      message.textContent=card.message;
+      cardNumber.textContent=idx+1;
+      drawGeometry(idx);
+      [symName, meaning, message].forEach(el=>{
+        el.classList.add('reveal');
+        setTimeout(()=>el.classList.remove('reveal'),600);
+      });
+    });
 
-  gain.gain.setValueAtTime(0.0001, now);
-  gain.gain.exponentialRampToValueAtTime(0.12, now + 0.02);
-  gain.gain.exponentialRampToValueAtTime(0.001, now + 3.6);
+    shareBtn.addEventListener('click',()=>{
+      const url=location.href;
+      navigator.clipboard?.writeText(url).then(()=>{
+        shareBtn.textContent="Link copiado!";
+        setTimeout(()=>shareBtn.textContent="Compartilhar link",1400);
+      });
+    });
 
-  osc.connect(gain); gain.connect(masterGain);
-  osc.start(now); mod.start(now);
-  osc.stop(now + 4.5); mod.stop(now + 4.5);
-
-  // fade master a bit
-  masterGain.gain.cancelScheduledValues(now); masterGain.gain.setValueAtTime(masterGain.gain.value, now);
-  masterGain.gain.linearRampToValueAtTime(0.9, now + 0.02);
-  masterGain.gain.linearRampToValueAtTime(0.5, now + 4.5);
-}
-
-/* ====== Core: pick card randomly and display ====== */
-const drawBtn = document.getElementById('drawBtn');
-const shareBtn = document.getElementById('shareBtn');
-const numBadge = document.getElementById('numBadge');
-const symName = document.getElementById('symName');
-const meaningEl = document.getElementById('meaning');
-const messageEl = document.getElementById('message');
-
-function showCard(i, animate=true){
-  const card = cards[i];
-  numBadge.textContent = (i+1).toString().padStart(2,'0');
-  symName.textContent = card.name;
-  meaningEl.textContent = card.meaning;
-  messageEl.textContent = card.message;
-  // draw geometry
-  drawGeometry(i);
-
-  // visual reveal
-  const c = canvas;
-  if(animate){
-    c.classList.remove('reveal');
-    void c.offsetWidth;
-    c.classList.add('reveal');
-  }
-  // play bell with frequency mapped from index
-  try{
-    const base = 360 + i*10 + (Math.random()*20);
-    playBell(base);
-  }catch(e){/* audio might be blocked until user gesture */}
-}
-
-/* randomly pick index different from previous */
-let lastIndex = -1;
-function randomIndex(){
-  if(cards.length<=1) return 0;
-  let idx;
-  do { idx = Math.floor(Math.random()*cards.length); } while(idx === lastIndex);
-  lastIndex = idx;
-  return idx;
-}
-
-/* init: draw placeholder */
-clearCanvas();
-ctx.font = "18px Inter, Arial";
-ctx.fillStyle = "rgba(230,220,255,0.18)";
-ctx.textAlign = "center";
-ctx.fillText("Clique em 'Sortear Carta' para receber sua mensagem", canvas.width/2, canvas.height/2);
-
-/* click handling */
-drawBtn.addEventListener('click', async (ev) => {
-  // ensure audio context on user gesture
-  initAudio();
-  masterGain.gain.value = 0.6;
-  const idx = randomIndex();
-  showCard(idx,true);
-});
-
-/* share: copy current page link */
-shareBtn.addEventListener('click', (ev) => {
-  const url = location.href;
-  navigator.clipboard?.writeText(url).then(()=> {
-    shareBtn.textContent = "Link copiado!";
-    setTimeout(()=> shareBtn.textContent = "Compartilhar link", 1400);
-  }).catch(()=> {
-    alert("Copie o link manualmente: " + url);
-  });
-});
-
-/* optional: auto-draw for first visit */
-window.addEventListener('load', () => {
-  // small delay to let UI settle
-  setTimeout(()=> {
-    const idx = randomIndex();
-    showCard(idx, true);
-  }, 800);
-});
-
-/* small canvas resize handler */
-window.addEventListener('resize', () => {
-  const dpr = window.devicePixelRatio || 1;
-  canvas.width = Math.min(720, Math.floor(Math.min(window.innerWidth-80, 720)))*dpr;
-  canvas.height = canvas.width;
-  canvas.style.width = (canvas.width/dpr) + "px";
-  canvas.style.height = (canvas.height/dpr) + "px";
-  ctx.setTransform(dpr,0,0,dpr,0,0);
-  // redraw last card
-  if(lastIndex>=0) drawGeometry(lastIndex);
-});
-window.dispatchEvent(new Event('resize'));
-</script>
+    window.addEventListener('load',()=>{setTimeout(()=>{drawBtn.click();},800);});
+  </script>
 </body>
 </html>
+
