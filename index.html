@@ -58,7 +58,7 @@
     .meaning, .message{color:#dcd2ff;opacity:0.95;font-size:15px;line-height:1.5;text-align:center;}
     .message{background:var(--glass);border-radius:10px;padding:12px;color:#f7ecff;font-style:italic;}
     .controls{display:flex;gap:10px;align-items:center;margin-top:10px;flex-wrap:wrap;justify-content:center;}
-    footer{display:none;} /* remove footer secundário */
+    footer{display:none;} 
     .reveal {
       transform-origin:50% 50%;
       animation: pop .6s cubic-bezier(.2,.9,.34,1) both;
@@ -132,4 +132,61 @@
 
       ctx.clearRect(0,0,canvas.width,canvas.height);
 
-      const g = ctx.createRad
+      const g = ctx.createRadialGradient(cx,cy,40,cx,cy,520);
+      g.addColorStop(0,"rgba(170,120,255,0.12)");
+      g.addColorStop(0.6,"rgba(60,20,80,0.04)");
+      g.addColorStop(1,"rgba(6,2,20,0)");
+      ctx.fillStyle = g;
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+
+      ctx.save();
+      ctx.translate(cx,cy);
+      const t=Date.now()*0.00012;
+      ctx.rotate(Math.sin(t+idx)*0.02);
+      ctx.lineWidth=3;
+      ctx.strokeStyle="rgba(230,215,255,0.9)";
+      ctx.beginPath();
+      for(let i=0;i<6;i++){
+        const angle=(i/6)*Math.PI*2;
+        ctx.lineTo(Math.cos(angle)*size,Math.sin(angle)*size);
+      }
+      ctx.closePath();
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function randomIndex(){return Math.floor(Math.random()*cards.length);}
+    const drawBtn=document.getElementById('drawBtn');
+    const shareBtn=document.getElementById('shareBtn');
+    const symName=document.getElementById('symName');
+    const meaning=document.getElementById('meaning');
+    const message=document.getElementById('message');
+    const cardNumber=document.getElementById('cardNumber');
+
+    drawBtn.addEventListener('click',()=>{
+      const idx=randomIndex();
+      const card=cards[idx];
+      symName.textContent=card.name;
+      meaning.textContent=card.meaning;
+      message.textContent=card.message;
+      cardNumber.textContent=idx+1;
+      drawGeometry(idx);
+      [symName, meaning, message].forEach(el=>{
+        el.classList.add('reveal');
+        setTimeout(()=>el.classList.remove('reveal'),600);
+      });
+    });
+
+    shareBtn.addEventListener('click',()=>{
+      const url=location.href;
+      navigator.clipboard?.writeText(url).then(()=>{
+        shareBtn.textContent="Link copiado!";
+        setTimeout(()=>shareBtn.textContent="Compartilhar link",1400);
+      });
+    });
+
+    window.addEventListener('load',()=>{setTimeout(()=>{drawBtn.click();},800);});
+    window.addEventListener('resize',()=> drawBtn.click());
+  </script>
+</body>
+</html>
